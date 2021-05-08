@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Metrics">
+      <UniqueIdentifier>{a80e35ee-d0c6-4427-9b13-8750e21af9a6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Metrics\TotalCpuUsageMetric.cpp">
+      <Filter>Metrics</Filter>
+    </ClCompile>
+    <ClCompile Include="Metrics\Metric.cpp">
+      <Filter>Metrics</Filter>
+    </ClCompile>
+    <ClCompile Include="Metrics\RamMetric.cpp">
+      <Filter>Metrics</Filter>
+    </ClCompile>
+    <ClCompile Include="Metrics\TopCoreUsageMetric.cpp">
+      <Filter>Metrics</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivityBand.cpp" />
+    <ClCompile Include="ClassFactory.cpp" />
+    <ClCompile Include="GraphPainter.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MetricPainter.cpp" />
+    <ClCompile Include="Registration.cpp" />
+    <ClCompile Include="Settings.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Metrics\TotalCpuUsageMetric.hpp">
+      <Filter>Metrics</Filter>
+    </ClInclude>
+    <ClInclude Include="Metrics\Metric.hpp">
+      <Filter>Metrics</Filter>
+    </ClInclude>
+    <ClInclude Include="Metrics\RamMetric.hpp">
+      <Filter>Metrics</Filter>
+    </ClInclude>
+    <ClInclude Include="Metrics\TopCoreUsageMetric.hpp">
+      <Filter>Metrics</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivityBand.hpp" />
+    <ClInclude Include="ClassFactory.hpp" />
+    <ClInclude Include="GraphPainter.hpp" />
+    <ClInclude Include="Macros.h" />
+    <ClInclude Include="MetricPainter.hpp" />
+    <ClInclude Include="Registration.h" />
+    <ClInclude Include="Windows.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ActivityBand.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ActivityBand.rc" />
+  </ItemGroup>
+</Project>
