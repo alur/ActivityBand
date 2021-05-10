@@ -9,13 +9,17 @@ CpuHistogram::CpuHistogram(const MetricStore &metricStore) : m_metricStore(metri
 void CpuHistogram::Paint(const D2D1_RECT_F &graphPosition) const {
   if (m_metricStore.GetSnapshots().empty()) return;
 
-  PaintLine(graphPosition, [](const MetricSnapshot &snapshot) {
+  m_renderTarget->DrawRectangle(graphPosition, m_borderBrush);
+
+  D2D1_RECT_F pos = D2D1::RectF(graphPosition.left + 0.5f, graphPosition.top + 0.5f,
+    graphPosition.right - 0.5f, graphPosition.bottom - 0.5f);
+  PaintLine(pos, [](const MetricSnapshot &snapshot) {
     return *std::max_element(snapshot.cpu_core_usage.begin(), snapshot.cpu_core_usage.end());
   }, m_topCoreBrush);
-  PaintLine(graphPosition, [](const MetricSnapshot &snapshot) {
+  PaintLine(pos, [](const MetricSnapshot &snapshot) {
     return snapshot.cpu_usage;
   }, m_allCoreBrush);
-  PaintLine(graphPosition, [](const MetricSnapshot &snapshot) {
+  PaintLine(pos, [](const MetricSnapshot &snapshot) {
     return 1.0f - float(double(snapshot.memory.ullAvailPhys) / double(snapshot.memory.ullTotalPhys));
   }, m_memoryBrush);
 }
@@ -42,9 +46,19 @@ void CpuHistogram::PaintLine(const D2D1_RECT_F &graphPosition, std::function<flo
 
 HRESULT CpuHistogram::CreateDeviceResources(ID2D1RenderTarget *renderTarget) {
   m_renderTarget = renderTarget;
-  renderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::DarkBlue, 0.7f), &m_allCoreBrush);
-  renderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red, 0.7f), &m_memoryBrush);
-  return renderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::CornflowerBlue, 0.7f), &m_topCoreBrush);
+
+  HRESULT hr = renderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::DarkBlue, 0.7f), &m_allCoreBrush);
+  if (SUCCEEDED(hr)) {
+    hr = renderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red, 0.7f), &m_memoryBrush);
+  }
+  if (SUCCEEDED(hr)) {
+    hr = renderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::CornflowerBlue, 0.7f), &m_topCoreBrush);
+  }
+  if (SUCCEEDED(hr)) {
+    hr = m_renderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::WhiteSmoke, 0.7f), &m_borderBrush);
+  }
+
+  return hr;
 }
 
 void CpuHistogram::DiscardDeviceResources() {
@@ -52,4 +66,5 @@ void CpuHistogram::DiscardDeviceResources() {
   SAFE_RELEASE(m_allCoreBrush);
   SAFE_RELEASE(m_memoryBrush);
   SAFE_RELEASE(m_topCoreBrush);
+  SAFE_RELEASE(m_borderBrush);
 }

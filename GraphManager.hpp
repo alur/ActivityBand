@@ -21,7 +21,6 @@ public:
   void DiscardDeviceResources();
 
 private:
-  void PaintGrid() const;
   bool GetUpdateRect(D2D1_RECT_F &) const;
 
 private:
@@ -30,9 +29,6 @@ private:
   D2D1_RECT_F m_graphPosition; // Within the window.
 
   ID2D1HwndRenderTarget *m_renderTarget = nullptr;
-  ID2D1SolidColorBrush *m_backgroundBrush = nullptr;
-  ID2D1SolidColorBrush *m_borderBrush = nullptr;
-  ID2D1SolidColorBrush *m_gridBrush = nullptr;
 
   const MetricStore &m_metricStore;
   std::vector<CpuHistogram *> m_graphs;

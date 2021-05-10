@@ -20,10 +20,6 @@ void GraphManager::Paint() {
   m_renderTarget->PushAxisAlignedClip(&updateRect, D2D1_ANTIALIAS_MODE_ALIASED);
   m_renderTarget->Clear();
 
-  // m_renderTarget->FillRectangle(m_graphPosition, m_backgroundBrush);
-  // PaintGrid();
-  m_renderTarget->DrawRectangle(m_graphPosition, m_backgroundBrush);
-
   for (const auto graph : m_graphs) {
     graph->Paint(m_graphPosition);
   }
@@ -36,31 +32,6 @@ void GraphManager::Paint() {
   }
   else {
     ValidateRect(m_hwnd, nullptr);
-  }
-}
-
-void GraphManager::PaintGrid() const {
-  D2D1_SIZE_F size = D2D1::SizeF(
-    m_graphPosition.right - m_graphPosition.left,
-    m_graphPosition.bottom - m_graphPosition.top);
-  D2D1_SIZE_F cellSize = D2D1::SizeF(size.width / 6.0f, size.height / 6.0f);
-
-  for (int i = 1; i < 6; i++) {
-    float location = m_graphPosition.left + cellSize.width * i;
-    m_renderTarget->DrawLine(
-      D2D1::Point2(location, m_graphPosition.top),
-      D2D1::Point2(location, m_graphPosition.bottom),
-      m_gridBrush
-    );
-  }
-
-  for (int i = 1; i < 6; i++) {
-    float location = m_graphPosition.top + cellSize.height * i;
-    m_renderTarget->DrawLine(
-      D2D1::Point2(m_graphPosition.left, location),
-      D2D1::Point2(m_graphPosition.right, location),
-      m_gridBrush
-    );
   }
 }
 
@@ -105,19 +76,6 @@ HRESULT GraphManager::ReCreateDeviceResources() {
     pD2DFactory->Release();
   }
 
-  if (SUCCEEDED(hr)) {
-    hr = m_renderTarget->CreateSolidColorBrush(
-      D2D1::ColorF(D2D1::ColorF::WhiteSmoke, 0.7f), &m_backgroundBrush);
-  }
-  if (SUCCEEDED(hr)) {
-    hr = m_renderTarget->CreateSolidColorBrush(
-      D2D1::ColorF(D2D1::ColorF::CornflowerBlue, 0.7f), &m_gridBrush);
-  }
-  if (SUCCEEDED(hr)) {
-    hr = m_renderTarget->CreateSolidColorBrush(
-      D2D1::ColorF(D2D1::ColorF::CornflowerBlue, 0.7f), &m_borderBrush);
-  }
-
   for (const auto graph : m_graphs) {
     if (SUCCEEDED(hr)) {
       hr = graph->CreateDeviceResources(m_renderTarget);
@@ -130,13 +88,10 @@ HRESULT GraphManager::ReCreateDeviceResources() {
 }
 
 void GraphManager::DiscardDeviceResources() {
-  SAFE_RELEASE(m_borderBrush);
-  SAFE_RELEASE(m_backgroundBrush);
-  SAFE_RELEASE(m_gridBrush);
-  SAFE_RELEASE(m_renderTarget);
   for (const auto graph : m_graphs) {
     graph->DiscardDeviceResources();
   }
+  SAFE_RELEASE(m_renderTarget);
 }
 
 bool GraphManager::GetUpdateRect(D2D1_RECT_F &rect) const {

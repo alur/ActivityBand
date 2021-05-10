@@ -32,7 +32,7 @@ ActivityBand::ActivityBand() : m_graphManager(m_metricStore) {
 }
 
 ActivityBand::~ActivityBand() {
-  SAFE_RELEASE(m_site);
+  if (m_site) m_site->Release();
   if (m_hwnd) DestroyWindow(m_hwnd);
   InterlockedDecrement(&::objectCounter);
 }

@@ -20,8 +20,10 @@ private:
 
 private:
   const MetricStore &m_metricStore;
+
   ID2D1RenderTarget *m_renderTarget = nullptr;
   ID2D1SolidColorBrush *m_allCoreBrush = nullptr;
   ID2D1SolidColorBrush *m_memoryBrush = nullptr;
   ID2D1SolidColorBrush *m_topCoreBrush = nullptr;
+  ID2D1SolidColorBrush *m_borderBrush = nullptr;
 };
