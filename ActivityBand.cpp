@@ -1,9 +1,6 @@
 #include "ActivityBand.hpp"
 #include "Macros.h"
 
-#include "Metrics/RamMetric.hpp"
-#include "Metrics/TotalCpuUsageMetric.hpp"
-
 extern long objectCounter;
 extern const CLSID CLSID_ActivityBand;
 extern HMODULE module;
@@ -30,15 +27,11 @@ void ActivityBand::StaticTearDown() {
   UnregisterClass(WINDOW_CLASS, ::module);
 }
 
-ActivityBand::ActivityBand() {
+ActivityBand::ActivityBand() : m_graphManager(m_metricStore) {
   InterlockedIncrement(&::objectCounter);
-  m_metrics.push_back(new TotalCpuUsageMetric());
-  m_metrics.push_back(new RamMetric());
-  m_graphPainter.UpdateMetrics(m_metrics);
 }
 
 ActivityBand::~ActivityBand() {
-  for (auto *metric : m_metrics) delete metric;
   SAFE_RELEASE(m_site);
   if (m_hwnd) DestroyWindow(m_hwnd);
   InterlockedDecrement(&::objectCounter);
@@ -262,7 +255,7 @@ STDMETHODIMP ActivityBand::SetSite(LPUNKNOWN pUnkSite) {
         hr = E_FAIL;
       }
       SetTimer(m_hwnd, IDT_UPDATE, 1000, nullptr);
-      m_graphPainter.SetWindow(m_hwnd);
+      m_graphManager.SetWindow(m_hwnd);
     }
     pow->Release();
   }
@@ -334,11 +327,11 @@ STDMETHODIMP ActivityBand::GetSizeMax(PULARGE_INTEGER pcbSize) {
 LRESULT ActivityBand::HandleMessage(HWND window, UINT msg, WPARAM wParam, LPARAM lParam) {
   switch (msg) {
   case WM_PAINT:
-    m_graphPainter.Paint();
+    m_graphManager.Paint();
     return 0;
 
   case WM_SIZE:
-    m_graphPainter.UpdateWindowSize(D2D1::SizeU(LOWORD(lParam), HIWORD(lParam)));
+    m_graphManager.UpdateWindowSize(D2D1::SizeU(LOWORD(lParam), HIWORD(lParam)));
     break;
 
   case WM_ERASEBKGND:
@@ -350,9 +343,7 @@ LRESULT ActivityBand::HandleMessage(HWND window, UINT msg, WPARAM wParam, LPARAM
   case WM_TIMER:
     switch (wParam) {
     case IDT_UPDATE:
-      for (auto *metric : m_metrics) {
-        metric->Update();
-      }
+      m_metricStore.TakeSnapshot();
       InvalidateRect(window, nullptr, false);
       UpdateWindow(window);
       break;

@@ -6,10 +6,10 @@
 #endif
 
 // Window target versions
-#define _WIN32_WINNT    _WIN32_WINNT_WINBLUE
-#define WINVER          _WIN32_WINNT_WINBLUE
-#define _WIN32_IE       _WIN32_IE_IE100
-#define NTDDI_VERSION   NTDDI_WINBLUE
+#define _WIN32_WINNT    _WIN32_WINNT_WIN10
+#define WINVER          _WIN32_WINNT_WIN10
+#define _WIN32_IE       _WIN32_IE_IE110
+#define NTDDI_VERSION   NTDDI_WIN10
 
 // Window header options
 #define NOCOMM

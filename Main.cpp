@@ -7,6 +7,7 @@
 #pragma comment (lib, "advapi32.lib")
 #pragma comment (lib, "d2d1.lib")
 #pragma comment (lib, "ole32.lib")
+#pragma comment (lib, "pdh.lib")
 #pragma comment (lib, "shell32.lib")
 #pragma comment (lib, "user32.lib")
 

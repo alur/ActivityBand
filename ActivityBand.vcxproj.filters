@@ -1,51 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Metrics">
-      <UniqueIdentifier>{a80e35ee-d0c6-4427-9b13-8750e21af9a6}</UniqueIdentifier>
+    <Filter Include="Graphs">
+      <UniqueIdentifier>{24195e2b-2c6b-47be-a13b-7304af6e43e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Metrics\TotalCpuUsageMetric.cpp">
-      <Filter>Metrics</Filter>
-    </ClCompile>
-    <ClCompile Include="Metrics\Metric.cpp">
-      <Filter>Metrics</Filter>
-    </ClCompile>
-    <ClCompile Include="Metrics\RamMetric.cpp">
-      <Filter>Metrics</Filter>
-    </ClCompile>
-    <ClCompile Include="Metrics\TopCoreUsageMetric.cpp">
-      <Filter>Metrics</Filter>
-    </ClCompile>
     <ClCompile Include="ActivityBand.cpp" />
     <ClCompile Include="ClassFactory.cpp" />
-    <ClCompile Include="GraphPainter.cpp" />
+    <ClCompile Include="GraphManager.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MetricPainter.cpp" />
     <ClCompile Include="Registration.cpp" />
     <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="MetricStore.cpp" />
+    <ClCompile Include="Graphs\CpuHistogram.cpp">
+      <Filter>Graphs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Metrics\TotalCpuUsageMetric.hpp">
-      <Filter>Metrics</Filter>
-    </ClInclude>
-    <ClInclude Include="Metrics\Metric.hpp">
-      <Filter>Metrics</Filter>
-    </ClInclude>
-    <ClInclude Include="Metrics\RamMetric.hpp">
-      <Filter>Metrics</Filter>
-    </ClInclude>
-    <ClInclude Include="Metrics\TopCoreUsageMetric.hpp">
-      <Filter>Metrics</Filter>
-    </ClInclude>
     <ClInclude Include="ActivityBand.hpp" />
     <ClInclude Include="ClassFactory.hpp" />
-    <ClInclude Include="GraphPainter.hpp" />
+    <ClInclude Include="GraphManager.hpp" />
     <ClInclude Include="Macros.h" />
-    <ClInclude Include="MetricPainter.hpp" />
     <ClInclude Include="Registration.h" />
     <ClInclude Include="Windows.h" />
+    <ClInclude Include="MetricStore.hpp" />
+    <ClInclude Include="Graphs\CpuHistogram.hpp">
+      <Filter>Graphs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ActivityBand.def" />

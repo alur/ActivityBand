@@ -99,26 +99,20 @@
   <ItemGroup>
     <ClCompile Include="ActivityBand.cpp" />
     <ClCompile Include="ClassFactory.cpp" />
-    <ClCompile Include="GraphPainter.cpp" />
+    <ClCompile Include="GraphManager.cpp" />
+    <ClCompile Include="Graphs\CpuHistogram.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MetricPainter.cpp" />
-    <ClCompile Include="Metrics\Metric.cpp" />
-    <ClCompile Include="Metrics\RamMetric.cpp" />
-    <ClCompile Include="Metrics\TopCoreUsageMetric.cpp" />
-    <ClCompile Include="Metrics\TotalCpuUsageMetric.cpp" />
+    <ClCompile Include="MetricStore.cpp" />
     <ClCompile Include="Registration.cpp" />
     <ClCompile Include="Settings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActivityBand.hpp" />
     <ClInclude Include="ClassFactory.hpp" />
-    <ClInclude Include="GraphPainter.hpp" />
+    <ClInclude Include="GraphManager.hpp" />
+    <ClInclude Include="Graphs\CpuHistogram.hpp" />
     <ClInclude Include="Macros.h" />
-    <ClInclude Include="MetricPainter.hpp" />
-    <ClInclude Include="Metrics\Metric.hpp" />
-    <ClInclude Include="Metrics\RamMetric.hpp" />
-    <ClInclude Include="Metrics\TopCoreUsageMetric.hpp" />
-    <ClInclude Include="Metrics\TotalCpuUsageMetric.hpp" />
+    <ClInclude Include="MetricStore.hpp" />
     <ClInclude Include="Registration.h" />
     <ClInclude Include="Windows.h" />
   </ItemGroup>

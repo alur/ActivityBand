@@ -1,11 +1,16 @@
-#include "GraphPainter.hpp"
+#include "GraphManager.hpp"
 #include "Macros.h"
 
-GraphPainter::~GraphPainter() {
-  DiscardDeviceResources();
+GraphManager::GraphManager(const MetricStore &store) : m_metricStore(store) {
+  m_graphs.push_back(new CpuHistogram(store));
 }
 
-void GraphPainter::Paint() {
+GraphManager::~GraphManager() {
+  DiscardDeviceResources();
+  for (auto graph : m_graphs) delete graph;
+}
+
+void GraphManager::Paint() {
   D2D1_RECT_F updateRect;
 
   if (!GetUpdateRect(updateRect)) return;
@@ -19,8 +24,8 @@ void GraphPainter::Paint() {
   // PaintGrid();
   m_renderTarget->DrawRectangle(m_graphPosition, m_backgroundBrush);
 
-  for (const auto &painter : m_metricPainters) {
-    painter.Paint(m_graphPosition);
+  for (const auto graph : m_graphs) {
+    graph->Paint(m_graphPosition);
   }
 
   m_renderTarget->PopAxisAlignedClip();
@@ -28,12 +33,13 @@ void GraphPainter::Paint() {
   // If EndDraw fails we need to recreate all device-dependent resources
   if (m_renderTarget->EndDraw() == D2DERR_RECREATE_TARGET) {
     DiscardDeviceResources();
-  } else {
+  }
+  else {
     ValidateRect(m_hwnd, nullptr);
   }
 }
 
-void GraphPainter::PaintGrid() const {
+void GraphManager::PaintGrid() const {
   D2D1_SIZE_F size = D2D1::SizeF(
     m_graphPosition.right - m_graphPosition.left,
     m_graphPosition.bottom - m_graphPosition.top);
@@ -58,7 +64,7 @@ void GraphPainter::PaintGrid() const {
   }
 }
 
-void GraphPainter::SetWindow(HWND hwnd) {
+void GraphManager::SetWindow(HWND hwnd) {
   m_hwnd = hwnd;
 
   RECT rect;
@@ -67,7 +73,7 @@ void GraphPainter::SetWindow(HWND hwnd) {
   }
 }
 
-void GraphPainter::UpdateWindowSize(const D2D1_SIZE_U &size) {
+void GraphManager::UpdateWindowSize(const D2D1_SIZE_U &size) {
   m_windowSize = size;
   m_graphPosition = D2D1::RectF(0.0f, 5.0f, (FLOAT)size.width, (FLOAT)size.height - 5.0f);
   if (m_renderTarget) {
@@ -75,14 +81,7 @@ void GraphPainter::UpdateWindowSize(const D2D1_SIZE_U &size) {
   }
 }
 
-void GraphPainter::UpdateMetrics(const std::vector<Metric *> &metrics) {
-  m_metricPainters.clear();
-  for (const auto &metric : metrics) {
-    m_metricPainters.emplace_back(metric);
-  }
-}
-
-HRESULT GraphPainter::ReCreateDeviceResources() {
+HRESULT GraphManager::ReCreateDeviceResources() {
   if (m_renderTarget) return S_OK;
 
   ID2D1Factory *pD2DFactory;
@@ -119,9 +118,9 @@ HRESULT GraphPainter::ReCreateDeviceResources() {
       D2D1::ColorF(D2D1::ColorF::CornflowerBlue, 0.7f), &m_borderBrush);
   }
 
-  for (auto &painter : m_metricPainters) {
+  for (const auto graph : m_graphs) {
     if (SUCCEEDED(hr)) {
-      hr = painter.CreateDeviceResources(m_renderTarget);
+      hr = graph->CreateDeviceResources(m_renderTarget);
     }
   }
 
@@ -130,17 +129,17 @@ HRESULT GraphPainter::ReCreateDeviceResources() {
   return hr;
 }
 
-void GraphPainter::DiscardDeviceResources() {
+void GraphManager::DiscardDeviceResources() {
   SAFE_RELEASE(m_borderBrush);
   SAFE_RELEASE(m_backgroundBrush);
   SAFE_RELEASE(m_gridBrush);
   SAFE_RELEASE(m_renderTarget);
-  for (auto &painter : m_metricPainters) {
-    painter.DiscardDeviceResources();
+  for (const auto graph : m_graphs) {
+    graph->DiscardDeviceResources();
   }
 }
 
-bool GraphPainter::GetUpdateRect(D2D1_RECT_F &rect) const {
+bool GraphManager::GetUpdateRect(D2D1_RECT_F &rect) const {
   RECT updateRect;
   if (::GetUpdateRect(m_hwnd, &updateRect, FALSE) == FALSE) return false;
   rect = D2D1::RectF(

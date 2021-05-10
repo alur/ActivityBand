@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GraphPainter.hpp"
-#include "Metrics/Metric.hpp"
+#include "GraphManager.hpp"
+#include "MetricStore.hpp"
 
 #include "Windows.h"
 
@@ -66,7 +66,6 @@ private:
   ULONG m_refCount = 1;
   LPUNKNOWN m_site = nullptr;
   BOOL m_compositionEnabled = TRUE;
-  GraphPainter m_graphPainter;
-
-  std::vector<Metric *> m_metrics;
+  GraphManager m_graphManager;
+  MetricStore m_metricStore;
 };
