@@ -28,21 +28,25 @@ HRESULT MetricStore::TakeSnapshot() {
   snapshot.memory.dwLength = sizeof(snapshot.memory);
   GlobalMemoryStatusEx(&snapshot.memory); // TODO::Check return
 
-  GetTotalCpuMetric(snapshot);
+  GetTotalCpuMetric(snapshot); // TODO::Check return
 
   if (PdhCollectQueryData(m_query) == ERROR_SUCCESS) {
     PDH_FMT_COUNTERVALUE value;
     for (const auto counter : m_processorTimeCounters) {
-      PdhGetFormattedCounterValue(counter, PDH_FMT_DOUBLE, nullptr, &value);
+      PdhGetFormattedCounterValue(counter, PDH_FMT_DOUBLE, nullptr, &value); // TODO::Check return
       //PdhGetRawCounterValue(counter, nullptr, &value);
       snapshot.cpu_core_usage.push_back(float(value.doubleValue / 100.0));
     }
   }
 
   m_snapshots.push_front(snapshot);
-  if (m_snapshots.size() > 30) m_snapshots.pop_back();
+  if (m_snapshots.size() > GetMaxSnapshots()) m_snapshots.pop_back();
 
   return S_OK;
+}
+
+uint32_t MetricStore::GetMaxSnapshots() const {
+  return 120; // Gives a window size of 30 seconds with 4 updates per second.
 }
 
 const std::deque<MetricSnapshot> &MetricStore::GetSnapshots() const {

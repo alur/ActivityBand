@@ -19,6 +19,8 @@ public:
 
   HRESULT TakeSnapshot();
   const std::deque<MetricSnapshot> &GetSnapshots() const;
+  // Returns the number of snapshots that should be used to draw a complete graph.
+  uint32_t GetMaxSnapshots() const;
 
 private:
   HRESULT GetTotalCpuMetric(MetricSnapshot &);

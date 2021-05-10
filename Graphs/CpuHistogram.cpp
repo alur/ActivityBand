@@ -33,10 +33,10 @@ void CpuHistogram::PaintLine(const D2D1_RECT_F &graphPosition, std::function<flo
   for (size_t i = 0; i < points.size() - 1; ++i) {
     m_renderTarget->DrawLine(
       D2D1::Point2(
-        graphPosition.right - size.width * (i / (float(30) - 1.0f)),
+        graphPosition.right - size.width * (i / (float(m_metricStore.GetMaxSnapshots()) - 1.0f)),
         graphPosition.bottom - size.height * metric(points[i])),
       D2D1::Point2(
-        graphPosition.right - size.width * ((i + 1) / (float(30) - 1.0f)),
+        graphPosition.right - size.width * ((i + 1) / (float(m_metricStore.GetMaxSnapshots()) - 1.0f)),
         graphPosition.bottom - size.height * metric(points[i + 1])),
       brush,
       2.0f

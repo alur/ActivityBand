@@ -254,7 +254,7 @@ STDMETHODIMP ActivityBand::SetSite(LPUNKNOWN pUnkSite) {
       if (m_hwnd == nullptr) {
         hr = E_FAIL;
       }
-      SetTimer(m_hwnd, IDT_UPDATE, 1000, nullptr);
+      SetTimer(m_hwnd, IDT_UPDATE, 250, nullptr);
       m_graphManager.SetWindow(m_hwnd);
     }
     pow->Release();
@@ -343,7 +343,7 @@ LRESULT ActivityBand::HandleMessage(HWND window, UINT msg, WPARAM wParam, LPARAM
   case WM_TIMER:
     switch (wParam) {
     case IDT_UPDATE:
-      m_metricStore.TakeSnapshot();
+      m_metricStore.TakeSnapshot(); // TODO::Check return
       InvalidateRect(window, nullptr, false);
       UpdateWindow(window);
       break;
