@@ -21,7 +21,7 @@ void GraphManager::Paint() {
   m_renderTarget->Clear();
 
   for (const auto graph : m_graphs) {
-    graph->Paint(m_graphPosition);
+    graph->Paint();
   }
 
   m_renderTarget->PopAxisAlignedClip();
@@ -49,6 +49,9 @@ void GraphManager::UpdateWindowSize(const D2D1_SIZE_U &size) {
   m_graphPosition = D2D1::RectF(0.0f, 5.0f, (FLOAT)size.width, (FLOAT)size.height - 5.0f);
   if (m_renderTarget) {
     m_renderTarget->Resize(size);
+  }
+  for (const auto graph : m_graphs) {
+    graph->SetPosition(m_graphPosition);
   }
 }
 

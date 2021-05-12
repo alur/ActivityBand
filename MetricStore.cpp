@@ -46,7 +46,7 @@ HRESULT MetricStore::TakeSnapshot() {
 }
 
 uint32_t MetricStore::GetMaxSnapshots() const {
-  return 120; // Gives a window size of 30 seconds with 4 updates per second.
+  return 60; // Gives a window size of 15 seconds with 4 updates per second.
 }
 
 const std::deque<MetricSnapshot> &MetricStore::GetSnapshots() const {
